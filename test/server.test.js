@@ -1,13 +1,27 @@
-const request = require('supertest');  // Import supertest to make HTTP requests
-const http = require('http');         // Import the 'http' module
-const server = require('../server');  // Adjust the path to your server.js file if needed
+const http = require('http');
 
-describe('GET /', () => {
-    it('should respond with "Hello, CI/CD!"', (done) => {
-        request(server)  // Send a request to the server
-            .get('/')     // Make a GET request to the root route
-            .expect(200)  // Expect HTTP status 200 (OK)
-            .expect('Content-Type', /text\/plain/)  // Expect the content type to be plain text
-            .expect('Hello, CI/CD!', done);  // Expect the server to respond with 'Hello, CI/CD!'
+// Create the server in the test file
+const port = 3000;
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, CI/CD!');
+});
+
+beforeAll((done) => {
+    // Start the server before running the tests
+    server.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+        done(); // Call done to indicate the server is ready
     });
+});
+
+test('GET / should respond with "Hello, CI/CD!"', async () => {
+    const response = await fetch(`http://localhost:${port}`);
+    const body = await response.text();
+    expect(body).toBe('Hello, CI/CD!');
+});
+
+afterAll(() => {
+    // Close the server after the tests are done
+    server.close();
 });
