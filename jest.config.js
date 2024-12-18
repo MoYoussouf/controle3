@@ -1,11 +1,10 @@
-export default {
-  transform: {
-    "^.+\\.[t|j]sx?$": "babel-jest",
-  },
+module.exports = {
+  collectCoverage: true, // Collect test coverage
+  collectCoverageFrom: ['server.js'], // Ensure coverage collection from the server.js 
   testRegex: ".*\\.test\\.js$",
-  collectCoverage: true,
-  coverageDirectory: "coverage",
-  collectCoverageFrom: ["server.js"],
-  testTimeout: 10000,
-  verbose: true,
+  coverageDirectory: 'coverage', // Output directory for the coverage reports
+  coverageReporters: ['text', 'lcov'], // Report in text and lcov formats
+  testRegex: '.*\\.test\\.js$', // Match files with .test.js for testing
+  verbose: true, // Show detailed output of tests
+  testEnvironment: 'node', // Use Node.js environment for testing
 };
