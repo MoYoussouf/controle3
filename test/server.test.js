@@ -1,27 +1,36 @@
 const http = require('http');
+const fetch = require('node-fetch'); // Assuming you are using node-fetch for HTTP requests
+const server = require('../server'); // Your server file
 
-// Create the server in the test file
+let httpServer;
 const port = 3000;
-const server = http.createServer((req, res) => {
-    res.writeHead(200, { 'Content-Type': 'text/plain' });
-    res.end('Hello, CI/CD!');
-});
+
+jest.setTimeout(30000); // Set timeout to 30 seconds
 
 beforeAll((done) => {
-    // Start the server before running the tests
-    server.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
-        done(); // Call done to indicate the server is ready
-    });
+  httpServer = http.createServer(server);
+  httpServer.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+    done(); // Notify Jest the server is ready
+  });
+});
+
+afterAll((done) => {
+  httpServer.close(() => {
+    done(); // Notify Jest the server is closed
+  });
 });
 
 test('GET / should respond with "Hello, CI/CD!"', async () => {
-    const response = await fetch(`http://localhost:${port}`);
-    const body = await response.text();
-    expect(body).toBe('Hello, CI/CD!');
+  const response = await fetch(`http://localhost:${port}`);
+  const body = await response.text();
+  expect(response.status).toBe(200); // Check for HTTP 200 status
+  expect(body).toBe('Hello, CI/CD!'); // Check the response text
 });
 
-afterAll(() => {
-    // Close the server after the tests are done
-    server.close();
+test('GET /unknown should respond with 404', async () => {
+  const response = await fetch(`http://localhost:${port}/unknown`);
+  const body = await response.text();
+  expect(response.status).toBe(404); // Check for HTTP 404 status
+  expect(body).toBe('Route not found'); // Check the response text
 });
