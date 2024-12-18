@@ -1,6 +1,6 @@
 module.exports = {
   collectCoverage: true, // Collect test coverage
-  collectCoverageFrom: ['server.js'], // Ensure coverage collection from the server.js 
+  collectCoverageFrom: ['server.js'], // Ensure coverage collection from the server.js file
   testRegex: ".*\\.test\\.js$",
   coverageDirectory: 'coverage', // Output directory for the coverage reports
   coverageReporters: ['text', 'lcov'], // Report in text and lcov formats

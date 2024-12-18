@@ -7,10 +7,10 @@
     "test": "jest --coverage --verbose --detectOpenHandles --forceExit",
     "start": "node server.js"
   },
-  "dependencies": {
-    "node-fetch": "^3.0.0" 
-  },
   "devDependencies": {
     "jest": "^29.0.0"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
   }
 }
